@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 class Expenses extends StatefulWidget {
   const Expenses({super.key});
 
-  
-  
   @override
   State<Expenses> createState() => _ExpensesState();
 }
@@ -30,7 +28,20 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAppExpenseOverly() {
     showModalBottomSheet(
-        context: context, builder: (cntx) => NewExpense());
+      isScrollControlled: true,
+        context: context,
+        builder: (cntx) => NewExpense(onAddExpense: _addExpense));
+  }
+
+  void _addExpense(Expense expense) {
+    setState(() {
+      _registeredExpenses.add(expense);
+    });
+  }
+  void _removeExpense(Expense expense){
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
   }
 
   @override
@@ -46,7 +57,7 @@ class _ExpensesState extends State<Expenses> {
         children: [
           const Text('Chart'),
           Expanded(
-            child: ExpensesList(expenses: _registeredExpenses),
+            child: ExpensesList(expenses: _registeredExpenses,onRemoveExpense: _removeExpense,),
           ),
         ],
       ),
