@@ -5,6 +5,13 @@ import 'package:meals_app/screens/filtersScreen.dart';
 import 'package:meals_app/screens/mealsScreen.dart';
 import 'package:meals_app/widgets/main_drawer.dart';
 
+const kInitialFilters = {
+    Filter.glutenFree: false,
+    Filter.lactoseFree: false,
+    Filter.vegan: false,
+    Filter.vegitarian: false,
+  };
+
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
 
@@ -15,6 +22,7 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
   int _selectedPageindex = 0;
   final List<Meal> _favoriteMeals = [];
+   Map<Filter, bool> _selectedFilters = kInitialFilters;
 
   void _showInfoMessage(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -50,17 +58,22 @@ class _TabsScreenState extends State<TabsScreen> {
   void _setScreen(String identifier) async {
     Navigator.of(context).pop();
     if (identifier == 'filters') {
-      final result = await Navigator.of(context).push<Map<Filter,bool>>(
+      final result = await Navigator.of(context).push<Map<Filter, bool>>(
         MaterialPageRoute(
           builder: (ctx) => const FiltersScreen(),
         ),
       );
-    } else if (identifier == 'meals') {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (ctx) =>const  TabsScreen(),
-        ),
-      );
+
+      setState(() {
+        _selectedFilters = result ?? kInitialFilters;
+      });
+    
+    // } else if (identifier == 'meals') {
+    //   Navigator.of(context).push(
+    //     MaterialPageRoute(
+    //       builder: (ctx) => const TabsScreen(),
+    //     ),
+    //   );
     }
   }
 
